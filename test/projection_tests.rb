@@ -5,9 +5,16 @@ require 'test_helper'
 class ProjectionTests < Test::Unit::TestCase
   include TestHelper
 
+  def definition_sorter(definition)
+    definition.split(/\s+/).sort.join(' ')
+  end
+
   def test_read_strings
     tester = lambda { |expected, proj|
-      assert_equal(expected, Proj4::Projection.new(proj).definition)
+      assert_equal(
+        definition_sorter(expected),
+        definition_sorter(Proj4::Projection.new(proj).definition)
+      )
     }
 
     tester[
@@ -40,7 +47,10 @@ class ProjectionTests < Test::Unit::TestCase
 
   def test_read_arrays
     tester = lambda { |expected, proj|
-      assert_equal(expected, Proj4::Projection.new(proj).definition)
+      assert_equal(
+        definition_sorter(expected),
+        definition_sorter(Proj4::Projection.new(proj).definition)
+      )
     }
 
     tester[
@@ -73,7 +83,10 @@ class ProjectionTests < Test::Unit::TestCase
 
   def test_read_hashes
     tester = lambda { |expected, proj|
-      assert_equal(expected, Proj4::Projection.new(proj).definition)
+      assert_equal(
+        definition_sorter(expected),
+        definition_sorter(Proj4::Projection.new(proj).definition)
+      )
     }
 
     tester[
