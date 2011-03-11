@@ -10,8 +10,8 @@ end
 
 puts "Ruby version #{RUBY_VERSION} - #{RbConfig::CONFIG['RUBY_INSTALL_NAME']}"
 puts "PROJ version #{Proj4.version}"
-if defined?(Geos::FFIGeos)
-  puts "Using #{Geos::FFIProj4.proj4_library_path.join(', ')}"
+if defined?(Proj4::FFIProj4)
+  puts "Using #{Array(Proj4::FFIProj4.proj4_library_path).join(', ')}"
 end
 
 module TestHelper
