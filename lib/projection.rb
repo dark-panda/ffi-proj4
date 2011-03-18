@@ -121,21 +121,21 @@ module Proj4
         raise ArgumentError.new("Expected a Proj4::Projection")
       end
 
-      x_ptr = FFI::MemoryPointer.new(:pointer)
-      y_ptr = FFI::MemoryPointer.new(:pointer)
-      z_ptr = FFI::MemoryPointer.new(:pointer) unless z.nil?
+      x_ptr = FFI::MemoryPointer.new(:double)
+      y_ptr = FFI::MemoryPointer.new(:double)
+      z_ptr = FFI::MemoryPointer.new(:double) unless z.nil?
 
-      x_ptr.put_double(0, x)
-      y_ptr.put_double(0, y)
-      z_ptr.put_double(0, z) unless z.nil?
+      x_ptr.write_double(x)
+      y_ptr.write_double(y)
+      z_ptr.write_double(z) unless z.nil?
 
       result = FFIProj4.pj_transform(self.ptr, proj.ptr, 1, 1, x_ptr, y_ptr, z_ptr)
 
       if result >= 0 && !bool_result(result)
         Point.new(
-          x_ptr.get_double(0),
-          y_ptr.get_double(0),
-          z_ptr.get_double(0)
+          x_ptr.read_double,
+          y_ptr.read_double,
+          z_ptr.read_double
         )
       else
         raise TransformError.new(FFIProj4.pj_strerrno(result))
@@ -156,21 +156,21 @@ module Proj4
         raise ArgumentError.new("Expected a Proj4::Projection")
       end
 
-      x_ptr = FFI::MemoryPointer.new(:pointer)
-      y_ptr = FFI::MemoryPointer.new(:pointer)
-      z_ptr = FFI::MemoryPointer.new(:pointer) unless z.nil?
+      x_ptr = FFI::MemoryPointer.new(:double)
+      y_ptr = FFI::MemoryPointer.new(:double)
+      z_ptr = FFI::MemoryPointer.new(:double) unless z.nil?
 
-      x_ptr.put_double(0, x)
-      y_ptr.put_double(0, y)
-      z_ptr.put_double(0, z) unless z.nil?
+      x_ptr.write_double(x)
+      y_ptr.write_double(y)
+      z_ptr.write_double(z) unless z.nil?
 
       result = FFIProj4.pj_transform(self.ptr, proj.ptr, 1, 1, x_ptr, y_ptr, z_ptr)
 
       if result >= 0 && !bool_result(result)
         Point.new(
-          x_ptr.get_double(0),
-          y_ptr.get_double(0),
-          z_ptr.get_double(0)
+          x_ptr.read_double,
+          y_ptr.read_double,
+          z_ptr.read_double
         )
       else
         raise TransformError.new(FFIProj4.pj_strerrno(result))
