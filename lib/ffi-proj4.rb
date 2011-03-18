@@ -22,7 +22,7 @@ module Proj4
       paths = if ENV['PROJ4_LIBRARY_PATH']
         [ ENV['PROJ4_LIBRARY_PATH'] ]
       else
-        [ '/usr/{lib,lib64}', '/usr/local/{lib,lib64}', '/opt/local/{lib,lib64}' ]
+        [ '/usr/local/{lib64,lib}', '/opt/local/{lib64,lib}', '/usr/{lib64,lib}' ]
       end
 
       lib = if [
