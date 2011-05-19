@@ -8,11 +8,12 @@ require 'rake/rdoctask'
 
 $:.push 'lib'
 
+version = File.read('VERSION') rescue ''
+
 begin
   require 'jeweler'
   Jeweler::Tasks.new do |gem|
     gem.name = "ffi-proj4"
-    gem.version = "0.0.1"
     gem.summary = "An ffi wrapper for the PROJ.4 Cartographic Projections library."
     gem.description = gem.summary
     gem.email = "dark.panda@gmail.com"
@@ -33,7 +34,7 @@ end
 desc 'Build docs'
 Rake::RDocTask.new do |t|
   require 'rdoc/rdoc'
-  t.title = 'ffi-proj4 Documentation'
+  t.title ="ffi-proj4 #{version}"
   t.main = 'README.rdoc'
   t.rdoc_dir = 'doc'
   t.rdoc_files.include('README.rdoc', 'MIT-LICENSE', 'lib/**/*.rb')

@@ -9,6 +9,7 @@ else
 end
 
 puts "Ruby version #{RUBY_VERSION} - #{RbConfig::CONFIG['RUBY_INSTALL_NAME']}"
+puts "ffi-proj4 version #{Proj4::VERSION}"
 puts "PROJ version #{Proj4.version}"
 if defined?(Proj4::FFIProj4)
   puts "Using #{Array(Proj4::FFIProj4.proj4_library_path).join(', ')}"

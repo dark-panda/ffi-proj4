@@ -4,7 +4,7 @@ require 'ffi'
 require 'rbconfig'
 
 module Proj4
-  PROJ4_BASE = File.dirname(__FILE__)
+  PROJ4_BASE = File.join(File.dirname(__FILE__), 'ffi-proj4')
 
   autoload :Projection,
     File.join(PROJ4_BASE, 'projection')
@@ -132,7 +132,8 @@ module Proj4
   end
 
   module Constants
-    VERSION = if Proj4.version =~ /Rel\. (\d+)\.(\d+)\.(\d+)/
+    VERSION = File.read(File.join(PROJ4_BASE, %w{ .. .. VERSION })).strip
+    PROJ4_VERSION = if Proj4.version =~ /Rel\. (\d+)\.(\d+)\.(\d+)/
       "#{$1}#{$2}#{$3}".to_f
     end
 
