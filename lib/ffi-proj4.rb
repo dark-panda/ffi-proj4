@@ -3,6 +3,9 @@ require 'rubygems'
 require 'ffi'
 require 'rbconfig'
 
+#ENV['PROJ_LIB'] = File.join(File.dirname(__FILE__), %w{ .. data }) unless ENV['PROJ_LIB']
+#p ENV['PROJ_LIB']
+
 module Proj4
   PROJ4_BASE = File.join(File.dirname(__FILE__), 'ffi-proj4')
 
