@@ -110,6 +110,10 @@ module Proj4
 
       :pj_datum_transform => [
         :int, :pointer, :pointer, :long, :int, :pointer, :pointer, :pointer
+      ],
+
+      :setenv => [
+        :int, :string, :string, :int
       ]
     }
 
@@ -126,8 +130,19 @@ module Proj4
   end
 
   class << self
+    attr_reader :proj_lib
+
     def version
       FFIProj4.pj_get_release
+    end
+
+    def proj_lib=(lib)
+      @proj_lib = lib
+      if RUBY_PLATFORM == 'java'
+        FFIProj4.setenv('PROJ_LIB', lib, 1)
+      else
+        ENV['PROJ_LIB'] = lib
+      end
     end
   end
 
@@ -141,7 +156,7 @@ module Proj4
     DEG_TO_RAD = 0.0174532925199432958
   end
 
-  ENV['PROJ_LIB'] = File.join(File.dirname(PROJ4_BASE), %w{ data }) unless ENV['PROJ_LIB']
-
   include Constants
+
+  self.proj_lib = ENV['PROJ_LIB'] || File.join(File.dirname(__FILE__), %w{ .. data })
 end

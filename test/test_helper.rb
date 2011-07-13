@@ -14,7 +14,7 @@ puts "PROJ version #{Proj4.version}"
 if defined?(Proj4::FFIProj4)
   puts "Using #{Array(Proj4::FFIProj4.proj4_library_path).join(', ')}"
 end
-puts "Using PROJ_LIB #{ENV['PROJ_LIB']}"
+puts "Using PROJ_LIB #{Proj4.proj_lib}"
 
 module TestHelper
   TOLERANCE = 0.00000001
