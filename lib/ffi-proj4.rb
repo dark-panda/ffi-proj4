@@ -20,7 +20,7 @@ module Proj4
 
   module FFIProj4
     def self.proj4_library_path
-      return @proj4_library_paths if @proj4_library_paths
+      return @proj4_library_path if @proj4_library_path
 
       paths = if ENV['PROJ4_LIBRARY_PATH']
         [ ENV['PROJ4_LIBRARY_PATH'] ]
@@ -28,17 +28,25 @@ module Proj4
         [ '/usr/local/{lib64,lib}', '/opt/local/{lib64,lib}', '/usr/{lib64,lib}' ]
       end
 
-      lib = if [
-        Config::CONFIG['arch'],
-        Config::CONFIG['host_os']
-      ].detect { |c| c =~ /darwin/ }
+      lib = if FFI::Platform::IS_MAC
         'libproj.dylib'
+      elsif FFI::Platform::IS_WINDOWS
+        # For MinGW and the official binaries
+        '{libproj-?,proj}.dll'
       else
         'libproj.so'
       end
 
+      paths = if ENV['PROJ4_LIBRARY_PATH']
+        [ ENV['PROJ4_LIBRARY_PATH'] ]
+      elsif FFI::Platform::IS_WINDOWS
+        ENV['PATH'].split(File::PATH_SEPARATOR)
+      else
+        [ '/usr/local/{lib64,lib}', '/opt/local/{lib64,lib}', '/usr/{lib64,lib}' ]
+      end
+
       @proj4_library_path = Dir.glob(paths.collect { |path|
-          "#{path}/#{lib}"
+        File.expand_path(File.join(path, lib))
       }).first
     end
 
