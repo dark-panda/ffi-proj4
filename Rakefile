@@ -4,7 +4,7 @@
 require 'rubygems'
 require 'rubygems/package_task'
 require 'rake/testtask'
-require 'rdoc/task'
+require 'rake/rdoctask'
 
 $:.push 'lib'
 
@@ -37,5 +37,5 @@ Rake::RDocTask.new do |t|
   t.title ="ffi-proj4 #{version}"
   t.main = 'README.rdoc'
   t.rdoc_dir = 'doc'
-  t.rdoc_files.include('README.rdoc', 'MIT-LICENSE', 'lib/**/*.rb')
+  t.rdoc_files.include('MIT-LICENSE', 'lib/**/*.rb')
 end
