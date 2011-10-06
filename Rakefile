@@ -4,7 +4,7 @@
 require 'rubygems'
 require 'rubygems/package_task'
 require 'rake/testtask'
-require 'rake/rdoctask'
+require 'rdoc/task'
 
 if RUBY_VERSION >= '1.9'
   begin
@@ -41,7 +41,7 @@ end
 
 desc 'Build docs'
 Rake::RDocTask.new do |t|
-  require 'rdoc/rdoc'
+  require 'rdoc'
   t.title ="ffi-proj4 #{version}"
   t.main = 'README.rdoc'
   t.rdoc_dir = 'doc'
