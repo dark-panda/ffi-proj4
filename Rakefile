@@ -27,6 +27,7 @@ begin
     gem.email = "dark.panda@gmail.com"
     gem.homepage = "http://github.com/dark-panda/ffi-proj4"
     gem.authors =    [ "J Smith" ]
+    gem.add_dependency "ffi", "~> 1.0.0"
   end
   Jeweler::GemcutterTasks.new
 rescue LoadError
