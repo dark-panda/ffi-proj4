@@ -8,3 +8,4 @@ doc/
 *.orig
 *.patch
 .vimrc_local
+Gemfile.lock
