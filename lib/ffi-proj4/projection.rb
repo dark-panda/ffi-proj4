@@ -89,7 +89,7 @@ module Proj4
       ret = FFIProj4.pj_fwd(xy, self.ptr)
       errno = FFIProj4.pj_get_errno_ref.read_int
       if errno == 0
-        Point.new(ret.x, ret.y)
+        Point.new(ret[:x], ret[:y])
       else
         raise TransformError.new(FFIProj4.pj_strerrno(errno))
       end
@@ -123,11 +123,11 @@ module Proj4
 
       x_ptr = FFI::MemoryPointer.new(:double)
       y_ptr = FFI::MemoryPointer.new(:double)
-      z_ptr = FFI::MemoryPointer.new(:double) unless z.nil?
+      z_ptr = FFI::MemoryPointer.new(:double)
 
       x_ptr.write_double(x)
       y_ptr.write_double(y)
-      z_ptr.write_double(z) unless z.nil?
+      z_ptr.write_double(z.nil? ? 0 : z)
 
       result = FFIProj4.pj_transform(self.ptr, proj.ptr, 1, 1, x_ptr, y_ptr, z_ptr)
 

@@ -7,20 +7,15 @@ module Proj4
     )
 
     def initialize(*args)
-      if args.first.is_a?(FFI::Pointer)
-        super(*args)
-      else
-        self[:x] = if args.first.respond_to?(:read_double)
-          args.first.read_double
+      case args.first
+        when FFI::Pointer, FFI::Buffer
+          super(*args)
+        when FFI::Buffer
+          super(*args)
         else
-          args.first.to_f
-        end
-
-        self[:y] = if args[1].respond_to?(:read_double)
-          args.first.read_double
-        else
-          args[1].to_f
-        end
+          if !args.empty?
+            self[:x], self[:y] = args.map(&:to_f)
+          end
       end
     end
 
@@ -39,5 +34,10 @@ module Proj4
     def y
       self[:y]
     end
+
+    private
+      def is_ffi?(arg)
+        arg.is_a?(FFI::Pointer) || arg.is_a?(FFI::Buffer)
+      end
   end
 end
