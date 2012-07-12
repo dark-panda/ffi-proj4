@@ -21,7 +21,7 @@ module Proj4
 
   module FFIProj4
     def self.proj4_library_path
-      return @proj4_library_path if @proj4_library_path
+      return @proj4_library_path if defined?(@proj4_library_path)
 
       paths = if ENV['PROJ4_LIBRARY_PATH']
         [ ENV['PROJ4_LIBRARY_PATH'] ]
