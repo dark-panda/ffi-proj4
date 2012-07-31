@@ -17,7 +17,7 @@ Gem::Specification.new do |s|
   s.homepage = "http://github.com/dark-panda/ffi-proj4"
   s.require_paths = ["lib"]
 
-  s.add_dependency("ffi", ["~> 1.0.0"])
+  s.add_dependency("ffi", [">= 1.0.0"])
   s.add_dependency("rdoc")
   s.add_dependency("rake", ["~> 0.9"])
 end
