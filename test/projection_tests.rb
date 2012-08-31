@@ -23,7 +23,7 @@ class ProjectionTests < Test::Unit::TestCase
     ]
 
     tester[
-      '+init=epsg:31467 +proj=tmerc +lat_0=0 +lon_0=9 +k=1.000000 +x_0=3500000 +y_0=0 +ellps=bessel +datum=potsdam +units=m +no_defs +towgs84=606.0,23.0,413.0',
+      '+datum=potsdam +ellps=bessel +init=epsg:31467 +k=1 +lat_0=0 +lon_0=9 +no_defs +proj=tmerc +towgs84=598.1,73.7,418.2,0.202,0.045,-2.455,6.7 +units=m +x_0=3500000 +y_0=0',
       'init=epsg:31467'
     ]
 
@@ -59,7 +59,7 @@ class ProjectionTests < Test::Unit::TestCase
     ]
 
     tester[
-      '+init=epsg:31467 +proj=tmerc +lat_0=0 +lon_0=9 +k=1.000000 +x_0=3500000 +y_0=0 +ellps=bessel +datum=potsdam +units=m +no_defs +towgs84=606.0,23.0,413.0',
+      '+datum=potsdam +ellps=bessel +init=epsg:31467 +k=1 +lat_0=0 +lon_0=9 +no_defs +proj=tmerc +towgs84=598.1,73.7,418.2,0.202,0.045,-2.455,6.7 +units=m +x_0=3500000 +y_0=0',
       [ 'init=epsg:31467' ]
     ]
 
@@ -95,7 +95,7 @@ class ProjectionTests < Test::Unit::TestCase
     ]
 
     tester[
-      '+init=epsg:31467 +proj=tmerc +lat_0=0 +lon_0=9 +k=1.000000 +x_0=3500000 +y_0=0 +ellps=bessel +datum=potsdam +units=m +no_defs +towgs84=606.0,23.0,413.0',
+      '+datum=potsdam +ellps=bessel +init=epsg:31467 +k=1 +lat_0=0 +lon_0=9 +no_defs +proj=tmerc +towgs84=598.1,73.7,418.2,0.202,0.045,-2.455,6.7 +units=m +x_0=3500000 +y_0=0',
       { :init => 'epsg:31467' }
     ]
 
