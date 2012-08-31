@@ -23,19 +23,11 @@ module Proj4
     def self.proj4_library_path
       return @proj4_library_path if defined?(@proj4_library_path)
 
-      paths = if ENV['PROJ4_LIBRARY_PATH']
-        [ ENV['PROJ4_LIBRARY_PATH'] ]
-      else
-        [ '/usr/local/{lib64,lib}', '/opt/local/{lib64,lib}', '/usr/{lib64,lib}' ]
-      end
-
-      lib = if FFI::Platform::IS_MAC
-        'libproj.dylib'
-      elsif FFI::Platform::IS_WINDOWS
+      lib = if FFI::Platform::IS_WINDOWS
         # For MinGW and the official binaries
         '{libproj-?,proj}.dll'
       else
-        'libproj.so'
+        "libproj.#{FFI::Platform::LIBSUFFIX}"
       end
 
       paths = if ENV['PROJ4_LIBRARY_PATH']
