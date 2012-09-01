@@ -79,10 +79,10 @@ module Proj4
       }
     end
 
-    #def to_s
-      #"#<Proj4::Projection #{definition}>"
-    #end
-    #alias :inspect :to_s
+    def to_s
+      "#<Proj4::Projection #{definition}>"
+    end
+    alias :inspect :to_s
 
     def forward(x, y)
       xy = ProjXY.new(x, y)
