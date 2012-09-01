@@ -13,7 +13,11 @@ module Proj4
         when Array
           arg.collect { |a| a.sub(/^\+/, '') }
         when String
-          arg.strip.split(/ /).collect { |a| a.sub(/^\+/, '') }
+          if arg =~ /^(epsg|esri):/i
+            [ "+init=#{arg}" ]
+          else
+            arg.strip.split(/ /).collect { |a| a.sub(/^\+/, '') }
+          end
         when Hash
           arg.collect { |k, v|
             if v.nil?
