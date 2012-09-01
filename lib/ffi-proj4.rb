@@ -3,6 +3,7 @@ require 'rubygems'
 require 'ffi'
 require 'rbconfig'
 require 'ffi-proj4/version'
+require 'ffi-proj4/error'
 
 #ENV['PROJ_LIB'] = File.join(File.dirname(__FILE__), %w{ .. data }) unless ENV['PROJ_LIB']
 #p ENV['PROJ_LIB']
