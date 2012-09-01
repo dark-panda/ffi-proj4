@@ -8,6 +8,8 @@ else
   require File.join(File.dirname(__FILE__), %w{ .. lib ffi-proj4 })
 end
 
+Proj4.proj_lib = File.join(File.dirname(__FILE__), %w{ .. data }) if Proj4.respond_to?(:proj_lib)
+
 puts "Ruby version #{RUBY_VERSION} - #{RbConfig::CONFIG['RUBY_INSTALL_NAME']}"
 puts "ffi-proj4 version #{Proj4::VERSION}"
 puts "PROJ version #{Proj4.version}"
@@ -17,7 +19,7 @@ end
 puts "Using PROJ_LIB #{Proj4.proj_lib}"
 
 module TestHelper
-  TOLERANCE = 0.00000001
+  TOLERANCE = 0.000001
 
   def self.included(base)
     base.class_eval do

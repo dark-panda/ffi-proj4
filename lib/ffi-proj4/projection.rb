@@ -1,7 +1,6 @@
 
 module Proj4
   class ProjectionParseError < RuntimeError; end
-  class TransformError < RuntimeError; end
 
   class Projection
     include Tools
@@ -43,15 +42,14 @@ module Proj4
       ptr = FFIProj4.pj_init_plus(params)
 
       if ptr.null?
-        errno = FFIProj4.pj_get_errno_ref.read_int
-        raise ProjectionParseError.new(FFIProj4.pj_strerrno(errno))
+        result = FFIProj4.pj_get_errno_ref.read_int
+        raise ProjectionParseError.new(FFIProj4.pj_strerrno(result))
       else
         @ptr = FFI::AutoPointer.new(
           ptr,
           self.class.method(:release)
         )
       end
-    end
 
       self.ptr.autorelease = auto_free
     end
@@ -63,19 +61,23 @@ module Proj4
     def lat_long?
       bool_result(FFIProj4.pj_is_latlong(self.ptr))
     end
+    alias :isLatLong? :lat_long?
 
     def geocentric?
       bool_result(FFIProj4.pj_is_geocent(self.ptr))
     end
+    alias :isGeocent? :geocentric?
+    alias :isGeocentric? :geocentric?
 
     def definition
       @definition ||= FFIProj4.pj_get_def(self.ptr, 0).strip
     end
+    alias :getDef :definition
 
     def definition_as_hash
       self.definition.split(/ /).inject({}) { |memo, opt|
         memo.tap {
-          k, v = opt.split(/=/)
+          k, v = opt.split('=')
           k.sub!(/^\+/, '')
           v = true if v.nil?
           memo[k.to_sym] = v
@@ -88,106 +90,212 @@ module Proj4
     end
     alias :inspect :to_s
 
-    def forward(x, y)
-      xy = ProjXY.new(x, y)
+    def forward!(*args)
+      xy, point = xy_and_point_from_args(*args)
+
       ret = FFIProj4.pj_fwd(xy, self.ptr)
-      errno = FFIProj4.pj_get_errno_ref.read_int
-      if errno == 0
-        Point.new(ret[:x], ret[:y])
+      result = FFIProj4.pj_get_errno_ref.read_int
+
+      if result == 0
+        point.x = ret[:x]
+        point.y = ret[:y]
+        point.z = 0 if point.respond_to?(:z=)
+        point
       else
-        raise TransformError.new(FFIProj4.pj_strerrno(errno))
+        raise Proj4::Error.instantiate_error(result)
       end
     end
-    alias :forward_deg :forward
+    alias :forward_rad! :forward!
+    alias :forwardRad! :forward!
 
-    def forward_rad(x, y)
-      self.forward(deg_to_rad(x), deg_to_rad(y))
+    def forward(*args)
+      self.forward!(*dup_args(*args))
+    end
+    alias :forward_rad :forward
+    alias :forwardRad :forward
+
+    def forward_deg!(*args)
+      self.forward!(*args_deg_to_rad(*args))
+    end
+    alias :forwardDeg! :forward_deg!
+
+    def forward_deg(*args)
+      self.forward_deg!(*dup_args(*args))
+    end
+    alias :forwardDeg :forward_deg
+
+    def forward_all!(collection)
+      collection.each do |args|
+        self.forward_all!(proj, *args)
+      end
+      collection
     end
 
-    def inverse(x, y)
-      xy = ProjXY.new(x, y)
+    def forward_all(proj, collection)
+      collection.collect do |args|
+        self.forward!(proj, *(dup_args(*args)))
+      end
+    end
+
+    def inverse!(*args)
+      xy, point = xy_and_point_from_args(*args)
+
       ret = FFIProj4.pj_inv(xy, self.ptr)
-      errno = FFIProj4.pj_get_errno_ref.read_int
-      if errno == 0
-        Point.new(ret.x, ret.y)
+      result = FFIProj4.pj_get_errno_ref.read_int
+
+      if result == 0
+        point.x = ret[:x]
+        point.y = ret[:y]
+        point.z = 0 if point.respond_to?(:z=)
+        point
       else
-        raise TransformError.new(FFIProj4.pj_strerrno(errno))
+        raise Proj4::Error.instantiate_error(result)
       end
     end
-    alias :inverse_deg :inverse
+    alias :inverse_rad! :inverse!
+    alias :inverseRad! :inverse!
 
-    def inverse_rad(x, y)
-      self.inverse(deg_to_rad(x), deg_to_rad(y))
+    def inverse(*args)
+      self.inverse!(*dup_args(*args))
     end
+    alias :inverse_rad :inverse
+    alias :inverseRad :inverse
 
-    def transform(proj, x, y, z = nil)
-      if !proj.is_a?(Proj4::Projection)
-        raise ArgumentError.new("Expected a Proj4::Projection")
-      end
+    def inverse_deg!(*args)
+      self.inverse!(*args).to_deg!
+    end
+    alias :inverseDeg! :inverse_deg!
 
-      x_ptr = FFI::MemoryPointer.new(:double)
-      y_ptr = FFI::MemoryPointer.new(:double)
-      z_ptr = FFI::MemoryPointer.new(:double)
+    def inverse_deg(*args)
+      self.inverse_deg!(*dup_args(*args))
+    end
+    alias :inverseDeg :inverse_deg
 
-      x_ptr.write_double(x)
-      y_ptr.write_double(y)
-      z_ptr.write_double(z.nil? ? 0 : z)
+    def transform!(proj, *args)
+      perform_transform(:pj_transform, proj, *args)
+    end
+    alias :transform_rad! :transform!
+    alias :transformRad! :transform!
 
-      result = FFIProj4.pj_transform(self.ptr, proj.ptr, 1, 1, x_ptr, y_ptr, z_ptr)
-
-      if result >= 0 && !bool_result(result)
-        Point.new(
-          x_ptr.read_double,
-          y_ptr.read_double,
-          z_ptr.read_double
-        )
-      else
-        raise TransformError.new(FFIProj4.pj_strerrno(result))
-      end
+    def transform(proj, *args)
+      self.transform!(proj, *(dup_args(*args)))
     end
     alias :transform_rad :transform
+    alias :transformRad :transform
 
-    def transform_deg(proj, x, y, z = nil)
-      self.transform(proj, x, y, z).tap { |ret|
-        ret.x = rad_to_deg(ret.x)
-        ret.y = rad_to_deg(ret.y)
-        ret.z = rad_to_deg(ret.z)
-      }
+    def transform_deg!(proj, *args)
+      self.transform!(proj, *args).to_deg!
     end
 
-    def datum_transform(proj, x, y, z = nil)
-      if !proj.is_a?(Proj4::Projection)
-        raise ArgumentError.new("Expected a Proj4::Projection")
+    def transform_deg(proj, *args)
+      self.transform_deg!(proj, *(dup_args(*args)))
+    end
+
+    def datum_transform!(proj, *args)
+      perform_transform(:pj_datum_transform, proj, *args)
+    end
+    alias :datum_transform_rad! :datum_transform!
+
+    def datum_transform(proj, *args)
+      self.datum_transform!(proj, *(dup_args(*args)))
+    end
+
+    def datum_transform_deg!(proj, *args)
+      self.datum_transform!(proj, *args).to_deg!
+    end
+
+    def datum_transform_deg(proj, *args)
+      self.datum_transform_deg!(proj, *(dup_args(*args)))
+    end
+
+    def transform_all!(proj, collection)
+      collection.each do |args|
+        self.transform!(proj, *args)
+      end
+      collection
+    end
+
+    def transform_all(proj, collection)
+      collection.collect do |args|
+        self.transform!(proj, *(dup_args(*args)))
+      end
+    end
+
+    private
+      def xy_and_point_from_args(*args)
+        if args.length == 1
+          point = args.first
+          if point.is_a?(Proj4::ProjXY)
+            [ point, Proj4::Point.new(point.x, point.y) ]
+          elsif point.respond_to?(:x) && point.respond_to?(:y)
+            [ Proj4::ProjXY.new(point.x, point.y), point ]
+          else
+            raise ArgumentError.new("Expected a Proj4::ProjXY, a Proj4::Point or an object that responds to x and y methods.")
+          end
+        elsif args.length == 2
+          [ Proj4::ProjXY.new(args[0], args[1]), Proj4::Point.new(args[0], args[1]) ]
+        else
+          raise ArgumentError.new("Wrong number of arguments #{args.length} for 1-2")
+        end
       end
 
-      x_ptr = FFI::MemoryPointer.new(:double)
-      y_ptr = FFI::MemoryPointer.new(:double)
-      z_ptr = FFI::MemoryPointer.new(:double) unless z.nil?
-
-      x_ptr.write_double(x)
-      y_ptr.write_double(y)
-      z_ptr.write_double(z) unless z.nil?
-
-      result = FFIProj4.pj_transform(self.ptr, proj.ptr, 1, 1, x_ptr, y_ptr, z_ptr)
-
-      if result >= 0 && !bool_result(result)
-        Point.new(
-          x_ptr.read_double,
-          y_ptr.read_double,
-          z_ptr.read_double
-        )
-      else
-        raise TransformError.new(FFIProj4.pj_strerrno(result))
+      def point_from_args(*args)
+        if args.length >= 2
+          Proj4::Point.new(*args)
+        elsif args.length == 1 && args.first.respond_to?(:x) && args.first.respond_to?(:y)
+          args.first
+        else
+          raise ArgumentError.new("Expected either coordinates, a Proj4::Point or an object that responds to x and y methods.")
+        end
       end
-    end
-    alias :datum_transform_rad :datum_transform
 
-    def datum_transform_deg(proj, x, y, z = nil)
-      self.datum_transform(proj, x, y, z).tap { |ret|
-        ret.x = rad_to_deg(ret.x)
-        ret.y = rad_to_deg(ret.y)
-        ret.z = rad_to_deg(ret.z)
-      }
-    end
+      def args_deg_to_rad(*args)
+        args.collect { |value|
+          deg_to_rad!(value)
+        }
+      end
+
+      def args_rad_to_deg(*args)
+        args.collect { |value|
+          rad_to_deg!(value)
+        }
+      end
+
+      def dup_args(*args)
+        args.collect { |value|
+          if !value.is_a?(Numeric) && value.respond_to?(:dup)
+            value.dup
+          else
+            value
+          end
+        }
+      end
+
+      def perform_transform(transform_method, proj, *args)
+        if !proj.is_a?(Proj4::Projection)
+          raise TypeError.new("Expected a Proj4::Projection")
+        end
+
+        point = point_from_args(*args)
+
+        x_ptr = FFI::MemoryPointer.new(:double)
+        y_ptr = FFI::MemoryPointer.new(:double)
+        z_ptr = FFI::MemoryPointer.new(:double)
+
+        x_ptr.write_double(point.x)
+        y_ptr.write_double(point.y)
+        z_ptr.write_double(point.z.nil? ? 0 : point.z) if point.respond_to?(:z)
+
+        result = FFIProj4.send(transform_method, self.ptr, proj.ptr, 1, 1, x_ptr, y_ptr, z_ptr)
+
+        if result >= 0 && !bool_result(result)
+          point.x = x_ptr.read_double
+          point.y = y_ptr.read_double
+          point.z = z_ptr.read_double if point.respond_to?(:z=)
+          point
+        else
+          raise Proj4::Error.instantiate_error(result)
+        end
+      end
   end
 end

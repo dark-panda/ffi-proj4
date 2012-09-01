@@ -35,6 +35,26 @@ module Proj4
       self[:y]
     end
 
+    def to_deg!
+      self[:x] = self[:x] * Proj4::RAD_TO_DEG
+      self[:y] = self[:y] * Proj4::RAD_TO_DEG
+      self
+    end
+
+    def to_deg
+      self.dup.to_deg!
+    end
+
+    def to_rad!
+      self[:x] = self[:x] * Proj4::DEG_TO_RAD
+      self[:y] = self[:y] * Proj4::DEG_TO_RAD
+      self
+    end
+
+    def to_rad
+      self.dup.to_rad!
+    end
+
     private
       def is_ffi?(arg)
         arg.is_a?(FFI::Pointer) || arg.is_a?(FFI::Buffer)
