@@ -44,12 +44,12 @@ module Proj4
       else
         @ptr = FFI::AutoPointer.new(
           ptr,
-          auto_free ? self.class.method(:release) : self.class.method(:no_release)
+          self.class.method(:release)
         )
       end
     end
 
-    def self.no_release(ptr) #:nodoc:
+      self.ptr.autorelease = auto_free
     end
 
     def self.release(ptr) #:nodoc:
