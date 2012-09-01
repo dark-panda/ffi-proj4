@@ -52,10 +52,6 @@ module Proj4
         :string
       ],
 
-      :pj_transform => [
-        :int, :pointer, :pointer, :long, :int, :pointer, :pointer, :pointer
-      ],
-
       :pj_init_plus => [
         :pointer, :string
       ],
