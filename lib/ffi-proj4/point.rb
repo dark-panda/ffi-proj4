@@ -1,10 +1,34 @@
 
 module Proj4
   class Point
+    include Proj4::Tools
+
     attr_accessor :x, :y, :z
 
     def initialize(x, y, z = nil)
       @x, @y, @z = x, y, z
+    end
+
+    def to_deg!
+      self.x = rad_to_deg(self.x)
+      self.y = rad_to_deg(self.y)
+      self.z = rad_to_deg(self.z) unless self.z.nil?
+      self
+    end
+
+    def to_deg
+      self.dup.to_deg!
+    end
+
+    def to_rad!
+      self.x = deg_to_rad(self.x)
+      self.y = deg_to_rad(self.y)
+      self.z = deg_to_rad(self.z) unless self.z.nil?
+      self
+    end
+
+    def to_rad
+      self.dup.to_rad!
     end
   end
 end
