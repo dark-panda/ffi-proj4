@@ -222,6 +222,14 @@ module Proj4
       end
     end
 
+    def projection
+      self.to_hash[:proj]
+    end
+
+    def datum
+      self.to_hash[:datum]
+    end
+
     private
       def xy_and_point_from_args(*args)
         if args.length == 1

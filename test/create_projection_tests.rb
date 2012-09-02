@@ -121,6 +121,20 @@ class CreateProjectionTests < Test::Unit::TestCase
     hash_tester(PROJ_ORTEL_HASH, PROJ_ORTEL)
   end
 
+  def test_projection
+    assert_equal('longlat', PROJ_WGS84.projection)
+    assert_equal('tmerc', PROJ_GK.projection)
+    assert_equal('utm', PROJ_CONAKRY.projection)
+    assert_equal('ortel', PROJ_ORTEL.projection)
+  end
+
+  def test_datum
+    assert_equal('WGS84', PROJ_WGS84.datum)
+    assert_equal('potsdam', PROJ_GK.datum)
+    assert_nil(PROJ_CONAKRY.datum)
+    assert_nil(PROJ_ORTEL.datum)
+  end
+
   def test_shortcut_create
     proj = Proj4::Projection.new("epsg:4326")
 
