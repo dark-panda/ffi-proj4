@@ -21,11 +21,49 @@ puts "Using PROJ_LIB #{Proj4.proj_lib}"
 module TestHelper
   TOLERANCE = 0.000001
 
-  def self.included(base)
-    base.class_eval do
-    end
-  end
+  PROJ_WGS84 = Proj4::Projection.new('init=epsg:4326')
+  PROJ_GK = Proj4::Projection.new('init=epsg:31467')
+  PROJ_CONAKRY = Proj4::Projection.new('init=epsg:31528')
+  PROJ_ORTEL = Proj4::Projection.new([ 'proj=ortel', 'lon_0=90w' ])
 
-  def setup
-  end
+  PROJ_WGS84_HASH = {
+    :init => 'epsg:4326',
+    :proj => 'longlat',
+    :datum => 'WGS84',
+    :no_defs => true,
+    :ellps => 'WGS84',
+    :towgs84 => '0,0,0'
+  }
+
+  PROJ_GK_HASH = {
+    :init => 'epsg:31467',
+    :proj => 'tmerc',
+    :lat_0 => '0',
+    :lon_0 => '9',
+    :k => '1',
+    :x_0 => '3500000',
+    :y_0 => '0',
+    :datum => 'potsdam',
+    :units => 'm',
+    :no_defs => true,
+    :ellps => 'bessel',
+    :towgs84 => '598.1,73.7,418.2,0.202,0.045,-2.455,6.7'
+  }
+
+  PROJ_CONAKRY_HASH = {
+    :init => 'epsg:31528',
+    :proj => 'utm',
+    :zone => '28',
+    :a => '6378249.2',
+    :b => '6356515',
+    :towgs84 => '-23,259,-9,0,0,0,0',
+    :units => 'm',
+    :no_defs => true
+  }
+
+  PROJ_ORTEL_HASH = {
+    :proj => 'ortel',
+    :lon_0 => '90w',
+    :ellps => 'WGS84'
+  }
 end
