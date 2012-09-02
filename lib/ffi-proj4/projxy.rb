@@ -60,10 +60,5 @@ module Proj4
     def to_rad
       self.dup.to_rad!
     end
-
-    private
-      def is_ffi?(arg)
-        arg.is_a?(FFI::Pointer) || arg.is_a?(FFI::Buffer)
-      end
   end
 end
