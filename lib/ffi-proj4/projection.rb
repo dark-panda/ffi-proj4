@@ -237,12 +237,12 @@ module Proj4
           if point.is_a?(Proj4::ProjXY)
             [ point, Proj4::Point.new(point.x, point.y) ]
           elsif point.respond_to?(:x) && point.respond_to?(:y)
-            [ Proj4::ProjXY.new(point.x, point.y), point ]
+            [ Proj4::ProjXY.alloc_in.init(point.x, point.y), point ]
           else
             raise ArgumentError.new("Expected a Proj4::ProjXY, a Proj4::Point or an object that responds to x and y methods.")
           end
         elsif args.length == 2
-          [ Proj4::ProjXY.new(args[0], args[1]), Proj4::Point.new(args[0], args[1]) ]
+          [ Proj4::ProjXY.alloc_in.init(args[0], args[1]), Proj4::Point.new(args[0], args[1]) ]
         else
           raise ArgumentError.new("Wrong number of arguments #{args.length} for 1-2")
         end

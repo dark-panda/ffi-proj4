@@ -9,14 +9,20 @@ module Proj4
     def initialize(*args)
       case args.first
         when FFI::Pointer, FFI::Buffer
-          super(*args)
-        when FFI::Buffer
-          super(*args)
+          super
         else
-          if !args.empty?
-            self[:x], self[:y] = args.map(&:to_f)
-          end
+          super()
+          self.init(*args)
       end
+    end
+
+    def init(*args)
+      if !args.empty?
+        self[:x] = args[0].to_f
+        self[:y] = args[1].to_f
+      end
+
+      self
     end
 
     def x=(v)
