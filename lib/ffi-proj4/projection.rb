@@ -74,7 +74,7 @@ module Proj4
     end
     alias :getDef :definition
 
-    def definition_as_hash
+    def to_hash
       self.definition.split(/ /).inject({}) { |memo, opt|
         memo.tap {
           k, v = opt.split('=')
@@ -84,6 +84,7 @@ module Proj4
         }
       }
     end
+    alias :definition_as_hash :to_hash
 
     def to_s
       "#<Proj4::Projection #{definition}>"
