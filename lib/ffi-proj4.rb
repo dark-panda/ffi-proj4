@@ -152,6 +152,8 @@ module Proj4
       "#{$1}#{$2}#{$3}".to_f
     end
 
+    LIBVERSION = PROJ4_VERSION
+
     RAD_TO_DEG = 57.29577951308232
     DEG_TO_RAD = 0.0174532925199432958
   end
