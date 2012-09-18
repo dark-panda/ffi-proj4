@@ -46,4 +46,24 @@ class PointTests < Test::Unit::TestCase
       0.7853981633974483
     )
   end
+
+  def test_aliases
+    point = Proj4::Point.new(10, 20, 30)
+    assert_equal(10, point.x)
+    assert_equal(20, point.y)
+    assert_equal(10, point.lon)
+    assert_equal(20, point.lat)
+
+    point.lon = 15
+    point.lat = 25
+
+    assert_equal(15, point.x)
+    assert_equal(25, point.y)
+
+    point.x = 80
+    point.y = 85
+
+    assert_equal(80, point.lon)
+    assert_equal(85, point.lat)
+  end
 end

@@ -9,6 +9,11 @@ module Proj4
       @x, @y, @z = x, y, z
     end
 
+    alias :lon :x
+    alias :lon= :x=
+    alias :lat :y
+    alias :lat= :y=
+
     def to_deg!
       self.x = rad_to_deg(self.x)
       self.y = rad_to_deg(self.y)
