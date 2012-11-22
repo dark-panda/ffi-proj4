@@ -1,6 +1,7 @@
 
 require 'rubygems'
-require 'test/unit'
+require 'minitest/autorun'
+require 'minitest/reporters'
 
 if ENV['USE_BINARY_PROJ4']
   require 'proj4_ruby'
@@ -67,3 +68,6 @@ module TestHelper
     :ellps => 'WGS84'
   }
 end
+
+MiniTest::Reporters.use!(MiniTest::Reporters::SpecReporter.new)
+

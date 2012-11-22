@@ -2,7 +2,7 @@
 $: << File.dirname(__FILE__)
 require 'test_helper'
 
-class SimpleTransformationTests < Test::Unit::TestCase
+class SimpleTransformationTests < MiniTest::Unit::TestCase
   include TestHelper
 
   LONG = 8.4302123334
@@ -21,7 +21,7 @@ class SimpleTransformationTests < Test::Unit::TestCase
     point = Proj4::Point.new(x, y)
     result = proj.send(method, point)
 
-    assert_not_equal(result.object_id, point.object_id)
+    refute_equal(result.object_id, point.object_id)
     assert_in_delta(x, point.x, tolerance)
     assert_in_delta(y, point.y, tolerance)
     assert_in_delta(expected_x, result.x, tolerance)
@@ -75,7 +75,7 @@ class SimpleTransformationTests < Test::Unit::TestCase
   end
 
   def test_out_of_bounds
-    assert_raise Proj4::LatitudeOrLongitudeExceededLimitsError do
+    assert_raises Proj4::LatitudeOrLongitudeExceededLimitsError do
       PROJ_GK.forward_deg(190, 92)
     end
   end

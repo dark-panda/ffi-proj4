@@ -2,7 +2,7 @@
 $: << File.dirname(__FILE__)
 require 'test_helper'
 
-class ProjectionTests < Test::Unit::TestCase
+class ProjectionTests < MiniTest::Unit::TestCase
   include TestHelper
 
   def definition_sorter(definition)
@@ -46,7 +46,7 @@ class ProjectionTests < Test::Unit::TestCase
       'proj=ortel lon_0=90w'
     )
 
-    assert_raise(Proj4::ProjectionParseError) do
+    assert_raises(Proj4::ProjectionParseError) do
       definition_tester(
         '',
         'gibberish'
@@ -75,7 +75,7 @@ class ProjectionTests < Test::Unit::TestCase
       [ 'proj=ortel', 'lon_0=90w' ]
     )
 
-    assert_raise(Proj4::ProjectionParseError) do
+    assert_raises(Proj4::ProjectionParseError) do
       definition_tester(
         '',
         [ 'gibberish' ]
@@ -104,7 +104,7 @@ class ProjectionTests < Test::Unit::TestCase
       { :proj => 'ortel', :lon_0 => '90w' }
     )
 
-    assert_raise(Proj4::ProjectionParseError) do
+    assert_raises(Proj4::ProjectionParseError) do
       definition_tester(
         '',
         { :proj => 'gibberish' }

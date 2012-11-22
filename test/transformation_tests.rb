@@ -2,7 +2,7 @@
 $: << File.dirname(__FILE__)
 require 'test_helper'
 
-class TransformationTests < Test::Unit::TestCase
+class TransformationTests < MiniTest::Unit::TestCase
   include TestHelper
 
   def setup
@@ -20,7 +20,7 @@ class TransformationTests < Test::Unit::TestCase
   def test_gk_to_wgs84
     from = Proj4::Point.new(@rw, @hw, @zw)
     to = @proj_gk.transform(@proj_wgs84, from)
-    assert_not_equal(from.object_id, to.object_id)
+    refute_equal(from.object_id, to.object_id)
     assert_in_delta(@lon, to.x * Proj4::RAD_TO_DEG, TOLERANCE)
     assert_in_delta(@lat, to.y * Proj4::RAD_TO_DEG, TOLERANCE)
     assert_in_delta(0, to.z, TOLERANCE * (10 ** 3))
@@ -43,19 +43,19 @@ class TransformationTests < Test::Unit::TestCase
   end
 
   def test_no_dst_proj
-    assert_raise TypeError do
+    assert_raises TypeError do
       point = @proj_wgs84.transform(nil, Proj4::Point.new(@lon * Proj4::DEG_TO_RAD, @lat * Proj4::DEG_TO_RAD, 0))
     end
   end
 
   def test_not_a_point
-    assert_raise TypeError do
+    assert_raises TypeError do
       point = @proj_wgs84.transform(@proj_gk, nil)
     end
   end
 
   def test_mercator_at_pole_raise
-    assert_raise Proj4::ToleranceConditionError do
+    assert_raises Proj4::ToleranceConditionError do
       point = @proj_wgs84.transform(@proj_merc, Proj4::Point.new(0, 90 * Proj4::DEG_TO_RAD, 0))
     end
   end
@@ -89,7 +89,7 @@ class TransformationTests < Test::Unit::TestCase
   end
 
   def test_no_float
-    assert_raise TypeError do
+    assert_raises TypeError do
       @proj_gk.transform(@proj_wgs84, XYPoint.new('x', 'y', 'foo'))
     end
   end
