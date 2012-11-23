@@ -9,3 +9,5 @@ doc/
 *.patch
 .vimrc_local
 Gemfile.lock
+Gemfile.local
+Guardfile.local
