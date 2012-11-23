@@ -1,7 +1,10 @@
 
 require 'rubygems'
 require 'minitest/autorun'
-require 'minitest/reporters'
+
+if RUBY_VERSION >= '1.9'
+  require 'minitest/reporters'
+end
 
 if ENV['USE_BINARY_PROJ4']
   require 'proj4_ruby'
@@ -69,5 +72,7 @@ module TestHelper
   }
 end
 
-MiniTest::Reporters.use!(MiniTest::Reporters::SpecReporter.new)
+if RUBY_VERSION >= '1.9'
+  MiniTest::Reporters.use!(MiniTest::Reporters::SpecReporter.new)
+end
 
