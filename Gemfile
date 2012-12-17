@@ -8,6 +8,10 @@ gem "minitest"
 gem "minitest-reporters"
 gem "guard-minitest"
 
+if RUBY_VERSION >= '1.9'
+  gem "simplecov"
+end
+
 if RbConfig::CONFIG['host_os'] =~ /^darwin/
   gem "rb-fsevent"
   gem "growl"
