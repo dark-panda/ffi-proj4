@@ -1,0 +1,29 @@
+
+= PROJ.4 Ruby Bindings via FFI
+
+== Requirements
+
+* the ffi extension for Ruby.
+* the PROJ.4 library. This release has been tested with version 4.8.0.
+
+Ruby versions known to work:
+
+* Ruby MRI 1.8.7, 1.9.2 and 1.9.3 x86_64, OSX
+* Ruby MRI 1.8.7, 1.9.2 and 1.9.3 x86_64, linux
+* JRuby 1.6.8 and 1.7.1
+
+== Features
+
+ffi-proj4 tries to support most of the features and interface found in the
+mostly-native proj4rb project, but while proj4rb uses some private
+interfaces to pull unit and datum information out of PROJ.4, we can't
+replicate that functionality as we rely on strictly public interfaces.
+Hopefully some of the internal interfaces required to replicate the
+functionality of proj4rb will be made public, but until then, ffi-proj4
+will be missing some proj4rb functionality and cannot act as a drop-in
+replacement for any applications requiring unit and datum sniffing.
+
+== License
+
+This gem is licensed under an MIT-style license. See the +MIT-LICENSE+ file for
+details.
