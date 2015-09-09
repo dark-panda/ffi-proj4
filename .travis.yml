@@ -1,0 +1,14 @@
+cache: bundler
+sudo: false
+language: ruby
+rvm:
+  - 2.2.3
+  - 2.1.7
+  - 2.0.0
+  - 1.9.3
+  - rbx-2
+  - jruby-19mode
+addons:
+  apt:
+    packages:
+      - libproj-dev
