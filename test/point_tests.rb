@@ -2,7 +2,7 @@
 $: << File.dirname(__FILE__)
 require 'test_helper'
 
-class PointTests < MiniTest::Unit::TestCase
+class PointTests < Minitest::Test
   include TestHelper
 
   def rad_deg_tester(method, expected_x, expected_y, expected_z, x, y, z)

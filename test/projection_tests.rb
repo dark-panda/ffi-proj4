@@ -2,7 +2,7 @@
 $: << File.dirname(__FILE__)
 require 'test_helper'
 
-class ProjectionTests < MiniTest::Unit::TestCase
+class ProjectionTests < Minitest::Test
   include TestHelper
 
   def definition_sorter(definition)

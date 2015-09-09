@@ -2,7 +2,7 @@
 $: << File.dirname(__FILE__)
 require 'test_helper'
 
-class SimpleTransformationTests < MiniTest::Unit::TestCase
+class SimpleTransformationTests < Minitest::Test
   include TestHelper
 
   LONG = 8.4302123334

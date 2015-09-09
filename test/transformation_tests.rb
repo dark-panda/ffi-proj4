@@ -2,7 +2,7 @@
 $: << File.dirname(__FILE__)
 require 'test_helper'
 
-class TransformationTests < MiniTest::Unit::TestCase
+class TransformationTests < Minitest::Test
   include TestHelper
 
   def setup
