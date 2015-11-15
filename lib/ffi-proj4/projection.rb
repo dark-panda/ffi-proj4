@@ -185,7 +185,7 @@ module Proj4
     alias :transformRad :transform
 
     def transform_deg!(proj, *args)
-      self.transform!(proj, *args).to_deg!
+      self.transform!(proj, *args_deg_to_rad(*args)).to_deg!
     end
 
     def transform_deg(proj, *args)

@@ -26,6 +26,15 @@ class TransformationTests < Minitest::Test
     assert_in_delta(0, to.z, TOLERANCE * (10 ** 3))
   end
 
+  def test_gk_to_wgs84_deg
+    from = Proj4::Point.new(@rw * Proj4::RAD_TO_DEG, @hw * Proj4::RAD_TO_DEG, @zw)
+    to = @proj_gk.transform_deg(@proj_wgs84, from)
+    refute_equal(from.object_id , to.object_id)
+    assert_in_delta(@lon, to.x, TOLERANCE)
+    assert_in_delta(@lat, to.y, TOLERANCE)
+    assert_in_delta(0, to.z, TOLERANCE * (10 ** 3))
+  end
+
   def test_gk_to_wgs84_inplace
     from = Proj4::Point.new(@rw, @hw, @zw)
     to = @proj_gk.transform!(@proj_wgs84, from)
