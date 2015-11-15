@@ -17,7 +17,6 @@ module Proj4
     def to_deg!
       self.x = rad_to_deg(self.x)
       self.y = rad_to_deg(self.y)
-      self.z = rad_to_deg(self.z) unless self.z.nil?
       self
     end
 
@@ -28,7 +27,6 @@ module Proj4
     def to_rad!
       self.x = deg_to_rad(self.x)
       self.y = deg_to_rad(self.y)
-      self.z = deg_to_rad(self.z) unless self.z.nil?
       self
     end
 
